@@ -4,21 +4,27 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Hello World | Chenrony的博客</title>
+  <title>NSCache | Chenrony的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+  <meta name="description" content="被你们遗忘的NSCache前言
+没有读这篇文章以前，你可能使用NSMutableDictionary来实现缓存，这样未尝不可，只不过你的代码可能会出卖你（一个未入门的IOS开发者）。读了这篇文章以后，你在实现内存缓存的时候会使用NSCache写出专业水平的代码。
+简介
+NSCache是一个用于实现内存缓存功能的类，实质是一个类似NSMutableDictionary的容器，在存储的基础上通过一系列">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://chernoy.ga/2015/12/01/hello-world/index.html">
+<meta property="og:title" content="NSCache">
+<meta property="og:url" content="http://chernoy.ga/2016/06/19/NSCache/index.html">
 <meta property="og:site_name" content="Chenrony的博客">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
-<meta property="og:updated_time" content="2015-12-01T12:31:20.000Z">
+<meta property="og:description" content="被你们遗忘的NSCache前言
+没有读这篇文章以前，你可能使用NSMutableDictionary来实现缓存，这样未尝不可，只不过你的代码可能会出卖你（一个未入门的IOS开发者）。读了这篇文章以后，你在实现内存缓存的时候会使用NSCache写出专业水平的代码。
+简介
+NSCache是一个用于实现内存缓存功能的类，实质是一个类似NSMutableDictionary的容器，在存储的基础上通过一系列">
+<meta property="og:updated_time" content="2016-06-19T13:40:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="twitter:title" content="NSCache">
+<meta name="twitter:description" content="被你们遗忘的NSCache前言
+没有读这篇文章以前，你可能使用NSMutableDictionary来实现缓存，这样未尝不可，只不过你的代码可能会出卖你（一个未入门的IOS开发者）。读了这篇文章以后，你在实现内存缓存的时候会使用NSCache写出专业水平的代码。
+简介
+NSCache是一个用于实现内存缓存功能的类，实质是一个类似NSMutableDictionary的容器，在存储的基础上通过一系列">
   
     <link rel="alternative" href="/atom.xml" title="Chenrony的博客" type="application/atom+xml">
   
@@ -183,11 +189,11 @@ Quick">
 	</div>
 </nav>
 
-      <div class="body-wrap"><article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-NSCache" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/12/01/hello-world/" class="article-date">
-  	<time datetime="2015-12-01T12:31:20.000Z" itemprop="datePublished">2015-12-01</time>
+      <a href="/2016/06/19/NSCache/" class="article-date">
+  	<time datetime="2016-06-19T13:07:40.000Z" itemprop="datePublished">2016-06-19</time>
 </a>
     </div>
   
@@ -200,7 +206,7 @@ Quick">
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      NSCache
     </h1>
   
 
@@ -208,6 +214,10 @@ Quick">
       
       <div class="article-info article-info-post">
         
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IOS/">IOS</a></li></ul>
+	</div>
+
         
 
         <div class="clearfix"></div>
@@ -216,15 +226,37 @@ Quick">
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <h1 id="被你们遗忘的NSCache">被你们遗忘的NSCache</h1><h2 id="前言">前言</h2><hr>
+<p>没有读这篇文章以前，你可能使用<code>NSMutableDictionary</code>来实现缓存，这样未尝不可，只不过你的代码可能会出卖你（一个未入门的IOS开发者）。读了这篇文章以后，你在实现内存缓存的时候会使用<code>NSCache</code>写出专业水平的代码。</p>
+<h2 id="简介">简介</h2><hr>
+<p><code>NSCache</code>是一个用于实现内存缓存功能的类，实质是一个类似<code>NSMutableDictionary</code>的容器，在存储的基础上通过一系列的缓存淘汰算法比如<code>LRU（Least Recently Used）</code>来实现自动移除缓存对象自动释放内存的功能。通常开发者会使用<code>NSMutableDictionary</code>而忽略了<code>NSCache</code>，  那是因为很多人对<code>NSCache</code>的优点并不了解。  </p>
+<h2 id="NSCache优点">NSCache优点</h2><hr>
+<p>与<code>NSMutableDictionary</code>相比，<code>NSCache</code>主要优点体现在一下几个方面：  </p>
+<pre><code><span class="variable">@property</span> NSUInteger totalCostLimit;    <span class="comment">// limits are imprecise/not strict</span>
+<span class="variable">@property</span> NSUInteger countLimit;    <span class="comment">// limits are imprecise/not strict</span>
+</code></pre><ol>
+<li>通过<code>totalCostLimit</code>、<code>countLimit</code>控制总的开销成本和缓存对象的数量，实现自动移除缓存对象、自动释放内存。</li>
+<li><code>NSCache</code>是线程安全的，多线程操作的时候不需要加锁，不必担心线程的安全问题。</li>
+<li><code>NSCache</code>存储的时候是通过强引用增加引用计数不需要深度拷贝对象节省了内存开销。</li>
+</ol>
+<h2 id="NSCache的API">NSCache的API</h2><hr>
+<p>读写方法类似<code>NSMutableDictionary</code></p>
+<pre><code>- <span class="comment">(nullable ObjectType)</span>objectForKey:<span class="comment">(KeyType)</span>key;
+- <span class="comment">(void)</span>setObject:<span class="comment">(ObjectType)</span>obj forKey:<span class="comment">(KeyType)</span>key; <span class="comment">// 0 cost</span>
+- <span class="comment">(void)</span>setObject:<span class="comment">(ObjectType)</span>obj forKey:<span class="comment">(KeyType)</span>key cost:<span class="comment">(NSUInteger)</span>g;
+- <span class="comment">(void)</span>removeObjectForKey:<span class="comment">(KeyType)</span>key;
+- <span class="comment">(void)</span>removeAllObjects;  
+</code></pre><p>其中<code>- (void)setObject:(ObjectType)obj forKey:(KeyType)key cost:(NSUInteger)g;</code>的<code>cost</code>参数你可能会有疑问，这个参数其实是表示对象的开销用于自动移除对象，准确的说应该是对象的字节数，当对象的大小不能直接获取时，你会把简单问题搞得越来越复杂。我告诉你一个最简单的办法就是填<code>0</code>或者换那个没有<code>cost</code>参数的API。  </p>
+<h2 id="NSCacheDelegate">NSCacheDelegate</h2><hr>
+<p>当一个缓存对象即将被<code>NSCache</code>移除的时候，你可以通过实现这个方法来做一些额外的操作，比如说：写入数据库或disk等等。</p>
+<pre><code><span class="variable">@protocol</span> NSCacheDelegate &lt;NSObject&gt;
+<span class="variable">@optional</span>
+- (void)<span class="attribute">cache</span>:(NSCache *)cache <span class="attribute">willEvictObject</span>:(id)obj;
+<span class="variable">@end</span>
+</code></pre><h2 id="NSCache应用">NSCache应用</h2><hr>
+<p>如果说了一大堆，你还是不会使用的话，那我再告诉你一条捷径，去看看<code>AFNetWorking</code>和<code>SDWebImage</code>是如何使用的。  </p>
+<p><code>AFNetWorking</code>源码<code>UIImageView+AFNetworking.h</code>就用到了<code>NSCache</code> 提供异步图片下载缓存。   </p>
+<p>大名鼎鼎的<code>SDWebImage</code>中<code>SDImageCache</code>内部的实现就是利用<code>NSCahce</code>来管理图片缓存。</p>
 
       
     </div>
@@ -234,15 +266,11 @@ Quick">
     
 <nav id="article-nav">
   
-    <a href="/2016/03/27/装修/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          装修
-        
-      </div>
-    </a>
   
+    <a href="/2016/03/27/装修/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">装修</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
   
 </nav>
 
@@ -275,7 +303,7 @@ Quick">
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="hello-world" data-title="Hello World" data-url="http://chernoy.ga/2015/12/01/hello-world/"></div>
+	<div class="ds-thread" data-thread-key="NSCache" data-title="NSCache" data-url="http://chernoy.ga/2016/06/19/NSCache/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
