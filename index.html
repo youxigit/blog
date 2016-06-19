@@ -198,7 +198,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/06/19/NSCache/">NSCache</a>
+      <a class="article-title" href="/2016/06/19/NSCache/">被你们遗忘的NSCache</a>
     </h1>
   
 
@@ -207,12 +207,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="被你们遗忘的NSCache">被你们遗忘的NSCache</h1><h2 id="前言">前言</h2><hr>
-<p>没有读这篇文章以前，你可能使用<code>NSMutableDictionary</code>来实现缓存，这样未尝不可，只不过你的代码可能会出卖你（一个未入门的IOS开发者）。读了这篇文章以后，你在实现内存缓存的时候会使用<code>NSCache</code>写出专业水平的代码。</p>
-<h2 id="简介">简介</h2><hr>
-<p><code>NSCache</code>是一个用于实现内存缓存功能的类，实质是一个类似<code>NSMutableDictionary</code>的容器，在存储的基础上通过一系列的缓存淘汰算法比如<code>LRU（Least Recently Used）</code>来实现自动移除缓存对象自动释放内存的功能。通常开发者会使用<code>NSMutableDictionary</code>而忽略了<code>NSCache</code>，  那是因为很多人对<code>NSCache</code>的优点并不了解。  </p>
-<h2 id="NSCache优点">NSCache优点</h2><hr>
-<p>与<code>NSMutableDictionary</code>相比，<code>NSCache</code>主要优点体现在一下几个方面：  </p>
+        <h2 id="前言">前言</h2><p>没有读这篇文章以前，你可能使用<code>NSMutableDictionary</code>来实现缓存，这样未尝不可，只不过你的代码可能会出卖你（一个未入门的IOS开发者）。读了这篇文章以后，你在实现内存缓存的时候会使用<code>NSCache</code>写出专业水平的代码。</p>
+<h2 id="简介">简介</h2><p><code>NSCache</code>是一个用于实现内存缓存功能的类，实质是一个类似<code>NSMutableDictionary</code>的容器，在存储的基础上通过一系列的缓存淘汰算法比如<code>LRU（Least Recently Used）</code>来实现自动移除缓存对象自动释放内存的功能。通常开发者会使用<code>NSMutableDictionary</code>而忽略了<code>NSCache</code>，  那是因为很多人对<code>NSCache</code>的优点并不了解。  </p>
+<h2 id="NSCache优点">NSCache优点</h2><p>与<code>NSMutableDictionary</code>相比，<code>NSCache</code>主要优点体现在一下几个方面：  </p>
 <pre><code><span class="variable">@property</span> NSUInteger totalCostLimit;    <span class="comment">// limits are imprecise/not strict</span>
 <span class="variable">@property</span> NSUInteger countLimit;    <span class="comment">// limits are imprecise/not strict</span>
 </code></pre><ol>
@@ -220,22 +217,19 @@
 <li><code>NSCache</code>是线程安全的，多线程操作的时候不需要加锁，不必担心线程的安全问题。</li>
 <li><code>NSCache</code>存储的时候是通过强引用增加引用计数不需要深度拷贝对象节省了内存开销。</li>
 </ol>
-<h2 id="NSCache的API">NSCache的API</h2><hr>
-<p>读写方法类似<code>NSMutableDictionary</code></p>
+<h2 id="NSCache的API">NSCache的API</h2><p>读写方法类似<code>NSMutableDictionary</code></p>
 <pre><code>- <span class="comment">(nullable ObjectType)</span>objectForKey:<span class="comment">(KeyType)</span>key;
 - <span class="comment">(void)</span>setObject:<span class="comment">(ObjectType)</span>obj forKey:<span class="comment">(KeyType)</span>key; <span class="comment">// 0 cost</span>
 - <span class="comment">(void)</span>setObject:<span class="comment">(ObjectType)</span>obj forKey:<span class="comment">(KeyType)</span>key cost:<span class="comment">(NSUInteger)</span>g;
 - <span class="comment">(void)</span>removeObjectForKey:<span class="comment">(KeyType)</span>key;
 - <span class="comment">(void)</span>removeAllObjects;  
 </code></pre><p>其中<code>- (void)setObject:(ObjectType)obj forKey:(KeyType)key cost:(NSUInteger)g;</code>的<code>cost</code>参数你可能会有疑问，这个参数其实是表示对象的开销用于自动移除对象，准确的说应该是对象的字节数，当对象的大小不能直接获取时，你会把简单问题搞得越来越复杂。我告诉你一个最简单的办法就是填<code>0</code>或者换那个没有<code>cost</code>参数的API。  </p>
-<h2 id="NSCacheDelegate">NSCacheDelegate</h2><hr>
-<p>当一个缓存对象即将被<code>NSCache</code>移除的时候，你可以通过实现这个方法来做一些额外的操作，比如说：写入数据库或disk等等。</p>
+<h2 id="NSCacheDelegate">NSCacheDelegate</h2><p>当一个缓存对象即将被<code>NSCache</code>移除的时候，你可以通过实现这个方法来做一些额外的操作，比如说：写入数据库或disk等等。</p>
 <pre><code><span class="variable">@protocol</span> NSCacheDelegate &lt;NSObject&gt;
 <span class="variable">@optional</span>
 - (void)<span class="attribute">cache</span>:(NSCache *)cache <span class="attribute">willEvictObject</span>:(id)obj;
 <span class="variable">@end</span>
-</code></pre><h2 id="NSCache应用">NSCache应用</h2><hr>
-<p>如果说了一大堆，你还是不会使用的话，那我再告诉你一条捷径，去看看<code>AFNetWorking</code>和<code>SDWebImage</code>是如何使用的。  </p>
+</code></pre><h2 id="NSCache应用">NSCache应用</h2><p>如果说了一大堆，你还是不会使用的话，那我再告诉你一条捷径，去看看<code>AFNetWorking</code>和<code>SDWebImage</code>是如何使用的。  </p>
 <p><code>AFNetWorking</code>源码<code>UIImageView+AFNetworking.h</code>就用到了<code>NSCache</code> 提供异步图片下载缓存。   </p>
 <p>大名鼎鼎的<code>SDWebImage</code>中<code>SDImageCache</code>内部的实现就是利用<code>NSCahce</code>来管理图片缓存。</p>
 
