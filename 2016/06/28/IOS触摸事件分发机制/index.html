@@ -6,36 +6,36 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>IOS触摸事件分发机制 | Chenrony的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="IOS触摸事件分发机制详解前言很多时候大家都不关心IOS触摸事件的分发机制的实现原理，当遇到以下几种情形的时候你很可能抓破头皮都找不到解决方案:  
+  <meta name="description" content="前言很多时候大家都不关心IOS触摸事件的分发机制的实现原理，当遇到以下几种情形的时候你很可能抓破头皮都找不到解决方案:  
 
 某个点击消息由父视图来处理，子视图怎么把消息传递给父视图  
 这个按钮不灵敏，怎么扩大点击响应区域  
 怎么在一个页面处理手绘、表情拖动放缩、文本编辑三种消息
 
-阅读本文，你会明白两个问题：IOS如何找到响应者、响应者是如何做出响应，明白这两个问题">
+阅读本文，你会明白两个问题：IOS如何找到响应者、响应者是如何做出响应，明白这两个问题你就能解决类似上述的疑难杂">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IOS触摸事件分发机制">
 <meta property="og:url" content="http://chernoy.ga/2016/06/28/IOS触摸事件分发机制/index.html">
 <meta property="og:site_name" content="Chenrony的博客">
-<meta property="og:description" content="IOS触摸事件分发机制详解前言很多时候大家都不关心IOS触摸事件的分发机制的实现原理，当遇到以下几种情形的时候你很可能抓破头皮都找不到解决方案:  
+<meta property="og:description" content="前言很多时候大家都不关心IOS触摸事件的分发机制的实现原理，当遇到以下几种情形的时候你很可能抓破头皮都找不到解决方案:  
 
 某个点击消息由父视图来处理，子视图怎么把消息传递给父视图  
 这个按钮不灵敏，怎么扩大点击响应区域  
 怎么在一个页面处理手绘、表情拖动放缩、文本编辑三种消息
 
-阅读本文，你会明白两个问题：IOS如何找到响应者、响应者是如何做出响应，明白这两个问题">
+阅读本文，你会明白两个问题：IOS如何找到响应者、响应者是如何做出响应，明白这两个问题你就能解决类似上述的疑难杂">
 <meta property="og:image" content="http://7xotrj.com1.z0.glb.clouddn.com/hit_testing.png">
 <meta property="og:image" content="http://7xotrj.com1.z0.glb.clouddn.com/iOS_responder_chain.png">
-<meta property="og:updated_time" content="2016-06-28T14:33:47.000Z">
+<meta property="og:updated_time" content="2016-06-28T14:36:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IOS触摸事件分发机制">
-<meta name="twitter:description" content="IOS触摸事件分发机制详解前言很多时候大家都不关心IOS触摸事件的分发机制的实现原理，当遇到以下几种情形的时候你很可能抓破头皮都找不到解决方案:  
+<meta name="twitter:description" content="前言很多时候大家都不关心IOS触摸事件的分发机制的实现原理，当遇到以下几种情形的时候你很可能抓破头皮都找不到解决方案:  
 
 某个点击消息由父视图来处理，子视图怎么把消息传递给父视图  
 这个按钮不灵敏，怎么扩大点击响应区域  
 怎么在一个页面处理手绘、表情拖动放缩、文本编辑三种消息
 
-阅读本文，你会明白两个问题：IOS如何找到响应者、响应者是如何做出响应，明白这两个问题">
+阅读本文，你会明白两个问题：IOS如何找到响应者、响应者是如何做出响应，明白这两个问题你就能解决类似上述的疑难杂">
   
     <link rel="alternative" href="/atom.xml" title="Chenrony的博客" type="application/atom+xml">
   
@@ -237,7 +237,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="IOS触摸事件分发机制详解">IOS触摸事件分发机制详解</h1><h2 id="前言">前言</h2><p>很多时候大家都不关心IOS触摸事件的分发机制的实现原理，当遇到以下几种情形的时候你很可能抓破头皮都找不到解决方案:  </p>
+        <h2 id="前言">前言</h2><p>很多时候大家都不关心IOS触摸事件的分发机制的实现原理，当遇到以下几种情形的时候你很可能抓破头皮都找不到解决方案:  </p>
 <ol>
 <li>某个点击消息由父视图来处理，子视图怎么把消息传递给父视图  </li>
 <li>这个按钮不灵敏，怎么扩大点击响应区域  </li>
