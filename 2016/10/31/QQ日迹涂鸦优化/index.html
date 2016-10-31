@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>QQ日迹涂鸦优化 | Chenrony的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言IOS6.6.0版本手机QQ，日迹涂鸦效果采用了矢量图形内存存储 + 局部刷新算法 + 二阶贝塞尔曲线中点绘制算法 + Quartz 2D渲染的全新解决方案，实现曲线平滑、无锯齿的效果。新方案主要优势是：矢量图形内存存储避免了对Disk进行频繁的I/O操作、局部刷新算法减少了CPU计算渲染路径和GPU渲染图形的负荷、Quartz 2D克服了OpenGL晦涩难懂的不足又能轻易的胜任图形渲染工作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QQ日迹涂鸦优化">
+<meta property="og:url" content="http://chernoy.ga/2016/10/31/QQ日迹涂鸦优化/index.html">
+<meta property="og:site_name" content="Chenrony的博客">
+<meta property="og:description" content="前言IOS6.6.0版本手机QQ，日迹涂鸦效果采用了矢量图形内存存储 + 局部刷新算法 + 二阶贝塞尔曲线中点绘制算法 + Quartz 2D渲染的全新解决方案，实现曲线平滑、无锯齿的效果。新方案主要优势是：矢量图形内存存储避免了对Disk进行频繁的I/O操作、局部刷新算法减少了CPU计算渲染路径和GPU渲染图形的负荷、Quartz 2D克服了OpenGL晦涩难懂的不足又能轻易的胜任图形渲染工作。">
+<meta property="og:image" content="http://7xotrj.com1.z0.glb.clouddn.com/smooth_line03.PNG">
+<meta property="og:image" content="http://7xotrj.com1.z0.glb.clouddn.com/smooth_line02.PNG">
+<meta property="og:image" content="http://7xotrj.com1.z0.glb.clouddn.com/smooth_line.png">
+<meta property="og:updated_time" content="2016-10-31T14:46:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="QQ日迹涂鸦优化">
+<meta name="twitter:description" content="前言IOS6.6.0版本手机QQ，日迹涂鸦效果采用了矢量图形内存存储 + 局部刷新算法 + 二阶贝塞尔曲线中点绘制算法 + Quartz 2D渲染的全新解决方案，实现曲线平滑、无锯齿的效果。新方案主要优势是：矢量图形内存存储避免了对Disk进行频繁的I/O操作、局部刷新算法减少了CPU计算渲染路径和GPU渲染图形的负荷、Quartz 2D克服了OpenGL晦涩难懂的不足又能轻易的胜任图形渲染工作。">
+  
+    <link rel="alternative" href="/atom.xml" title="Chenrony的博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xotrj.com1.z0.glb.clouddn.com/chenrony.jpeg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Chenrony</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">滴水穿石 | 积跬步至千里</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/tags/IOS">IOS</a></li>
+				        
+							<li><a href="/tags/生活与时光">生活与时光</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/youxigit" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/2710461587" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="/#" title="rss">rss</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/IOS/" style="font-size: 20px;">IOS</a> <a href="/tags/生活与时光/" style="font-size: 10px;">生活与时光</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">我的出现，这里不再是一片荒凉.......</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Chenrony</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xotrj.com1.z0.glb.clouddn.com/chenrony.jpeg" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Chenrony</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">滴水穿石 | 积跬步至千里</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/tags/IOS">IOS</a></li>
+		        
+					<li><a href="/tags/生活与时光">生活与时光</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/youxigit" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/2710461587" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/#" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-QQ日迹涂鸦优化" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/31/QQ日迹涂鸦优化/" class="article-date">
+  	<time datetime="2016-10-31T14:31:35.000Z" itemprop="datePublished">2016-10-31</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      QQ日迹涂鸦优化
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IOS/">IOS</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言">前言</h2><p><code>IOS6.6.0</code>版本手机<code>QQ</code>，日迹涂鸦效果采用了矢量图形内存存储 + 局部刷新算法 + 二阶贝塞尔曲线中点绘制算法 + <code>Quartz 2D</code>渲染的全新解决方案，实现曲线平滑、无锯齿的效果。新方案主要优势是：矢量图形内存存储避免了对<code>Disk</code>进行频繁的<code>I/O</code>操作、局部刷新算法减少了<code>CPU</code>计算渲染路径和<code>GPU</code>渲染图形的负荷、<code>Quartz 2D</code>克服了<code>OpenGL</code>晦涩难懂的不足又能轻易的胜任图形渲染工作。阅读本文你可以快速的掌握绘制优雅线条的要点。</p>
+<p>本文主要包含以下几个部分：</p>
+<ul>
+<li>优化背景</li>
+<li>优化前后效果</li>
+<li>优化方案详解</li>
+<li>总结</li>
+<li>参考文献</li>
+</ul>
+<h2 id="优化背景">优化背景</h2><p>绘制线条从来都不是一件困难的事情，但是要采用高效、轻量级别的方案绘制优雅的线条也不是一件很简单的事情。当时在开发过程中项目非常急迫，分别尝试了几种不是很优的解决方案。</p>
+<p>方案一：把矢量路径存储在内存中，在手指移动的过程中记录用户移动的位置同时把当前路径渲染出来刷新屏幕。缺点非常明显，当单次操作持续时间长、移动速度比较快、线条曲率较高的情形下线条不平滑、线条连接处出现明显、生硬的折线。原因是快速移动的时候全局渲染CPU、GPU负荷很重，就出现掉点导致线条不平滑。好处是路径存储在内存当中不需要I/O操作。显然这种效果是不能满足需求的。</p>
+<p>方案二：每一次手指操作结束后把当前的图形写入<code>Disk</code>保存，下一次操作的时候计算操作的区域，然后使用局部更新机制避免全局渲染带来的<code>CPU</code>、<code>GPU</code>资源浪费。用户撤消的时候就从<code>Disk</code>中把上一次操作的图片渲染出来。这种方案的优点是采用了局部刷新机制，撤消功能实现简单。缺点是大量的I/O操作对设备的电量消耗、磁盘读写性能和使用寿命、可用空间都是严峻的挑战。绘制出来的线条虽然比较平滑、无锯齿能满足产品需求，但是痛点却非常明显。</p>
+<p>当时迫于时间压力，就采用了方案二完成需求，打算后期版本迭代来优化处理。于是在<code>6.6.0</code>就开始了涂鸦的优化工作。</p>
+<h2 id="优化前后效果">优化前后效果</h2><h3 id="优化前的效果">优化前的效果</h3><p><strong>方案一效果：不光滑、锯齿</strong><br><img src="http://7xotrj.com1.z0.glb.clouddn.com/smooth_line03.PNG" alt=""></p>
+<p><strong>方案二效果：光滑、无锯齿但是大量I/O操作</strong></p>
+<h3 id="优化后的效果">优化后的效果</h3><p><strong>优化方案效果：光滑、无锯齿、高性能</strong></p>
+<p><img src="http://7xotrj.com1.z0.glb.clouddn.com/smooth_line02.PNG" alt=""></p>
+<h2 id="优化方案详解">优化方案详解</h2><p>优化方案主要结合了方案一和方案二的优点：矢量路径内存存储、局部刷新算法、<code>Quartz 2D</code>渲染框架，以及在此基础上改进了矢量路径绘制算法，采用二阶贝塞尔曲线中点绘制算法来达到最终光滑、无锯齿、高性能的优化效果。</p>
+<p>接下来结合代码详细讲述优化方案中的主要技术点：</p>
+<ul>
+<li>矢量路径内存存储</li>
+</ul>
+<p><code>TBEditDrawStep</code>用来记录单次操作的线条的属性和矢量位置信息，<code>_drawSteps</code>是一个数组用来记录所有的线条。</p>
+<pre><code>-(<span class="keyword">void</span>)touchesBegan:(<span class="built_in">NSSet</span> *)touches withEvent:(<span class="built_in">UIEvent</span> *)event
+{
+[<span class="keyword">self</span><span class="variable">.superview</span> touchesBegan:touches withEvent:event];
+    <span class="built_in">UITouch</span> *touch = [touches anyObject];
+<span class="comment">/**
+ *记录最近的三个点的位置，主要用于中点绘制算法，优化线条连接处的平滑效果
+ */</span>
+_previousPoint1 = [touch locationInView:<span class="keyword">self</span>];
+_previousPoint2 = [touch locationInView:<span class="keyword">self</span>];
+_currentPoint   = [touch locationInView:<span class="keyword">self</span>];
+
+    <span class="comment">/**
+ * TBEditDrawStep 记录用户每一次操作的信息，也可以理解为单次绘制的线条信息
+ */</span>
+TBEditDrawStep *aStep = [[TBEditDrawStep new] autorelease];
+aStep<span class="variable">.step</span> = <span class="keyword">self</span><span class="variable">.drawStep</span>;
+aStep<span class="variable">.lineWidth</span> = <span class="keyword">self</span><span class="variable">.lineWidth</span>;
+aStep<span class="variable">.lineColor</span> = <span class="keyword">self</span><span class="variable">.lineColor</span>;
+aStep<span class="variable">.path</span> = [[<span class="built_in">NSMutableArray</span> new] autorelease];
+[_drawSteps addObject:aStep];
+
+[<span class="keyword">self</span> touchesMoved:touches withEvent:event];
+}
+
+-(<span class="keyword">void</span>)touchesMoved:(<span class="built_in">NSSet</span> *)touches withEvent:(<span class="built_in">UIEvent</span> *)event
+{
+<span class="built_in">UITouch</span> *touch  = [touches anyObject];
+
+_previousPoint2  = _previousPoint1;
+_previousPoint1  = _currentPoint;
+_currentPoint    = [touch locationInView:<span class="keyword">self</span>];
+
+TBEditDrawStep *aStep = [_drawSteps lastObject];
+<span class="keyword">if</span> (aStep<span class="variable">.step</span> == TBDrawStepDraw) {
+[aStep<span class="variable">.path</span> addObject:[<span class="built_in">NSValue</span> valueWith<span class="built_in">CGPoint</span>:_currentPoint]];
+}
+<span class="comment">/**
+ *计算局部刷新的区域
+ */</span>
+[<span class="keyword">self</span> calculateNeedToDrawRect:_previousPoint1 previousPoint:_previousPoint2 currentPoint:_currentPoint];
+}
+</code></pre><ul>
+<li>局部刷新算法</li>
+</ul>
+<p>首先利用最近三个点计算出贝塞尔曲线的轨迹，然后计算出包含轨迹的最小矩形区域<code>CGRect bounds = CGPathGetBoundingBox(path);</code>，这个区域就是需要重新绘制的区域。执行<code>[self setNeedsDisplayInRect: bounds];</code>就实现了局部刷新的效果。</p>
+<pre><code>- (<span class="keyword">void</span>)calculateNeedToDrawRect:(<span class="built_in">CGPoint</span>)pp1 previousPoint:(<span class="built_in">CGPoint</span>)pp2 currentPoint:(<span class="built_in">CGPoint</span>)cp
+{
+    <span class="comment">/**
+     *取中点绘制，优化连接处平滑度。
+     */</span>
+        <span class="built_in">CGPoint</span> mid1    = midPoint1(pp1, pp2);
+    <span class="built_in">CGPoint</span> mid2    = midPoint1(cp, pp1);
+
+    <span class="comment">//计算局部刷新的区域</span>
+    <span class="built_in">CGMutablePathRef</span> path = <span class="built_in">CGPathCreateMutable</span>();
+    <span class="built_in">CGPathMoveToPoint</span>(path, <span class="literal">NULL</span>, mid1<span class="variable">.x</span>, mid1<span class="variable">.y</span>);
+    <span class="built_in">CGPathAddQuadCurveToPoint</span>(path, <span class="literal">NULL</span>, pp1<span class="variable">.x</span>, pp1<span class="variable">.y</span>, mid2<span class="variable">.x</span>, mid2<span class="variable">.y</span>);
+    <span class="built_in">CGRect</span> bounds = <span class="built_in">CGPathGetBoundingBox</span>(path);
+    <span class="built_in">CGPathRelease</span>(path);
+
+    <span class="built_in">CGRect</span> drawBox = bounds;
+
+    <span class="comment">//考虑线条宽度的因素，得到准确的刷新区域</span>
+    drawBox<span class="variable">.origin</span><span class="variable">.x</span>        -= <span class="keyword">self</span><span class="variable">.lineWidth</span> * <span class="number">1</span>;
+    drawBox<span class="variable">.origin</span><span class="variable">.y</span>        -= <span class="keyword">self</span><span class="variable">.lineWidth</span> * <span class="number">1</span>;
+    drawBox<span class="variable">.size</span><span class="variable">.width</span>      += <span class="keyword">self</span><span class="variable">.lineWidth</span> * <span class="number">2</span>;
+    drawBox<span class="variable">.size</span><span class="variable">.height</span>     += <span class="keyword">self</span><span class="variable">.lineWidth</span> * <span class="number">2</span>;
+
+    <span class="comment">//先渲染当前的layer</span>
+    [<span class="keyword">self</span><span class="variable">.layer</span> renderInContext:<span class="built_in">UIGraphicsGetCurrentContext</span>()];
+
+    <span class="comment">//局部刷新</span>
+    [<span class="keyword">self</span> setNeedsDisplayInRect:drawBox];
+
+    <span class="comment">//http://stackoverflow.com/a/4766028/489594</span>
+    [[<span class="built_in">NSRunLoop</span> currentRunLoop] runMode:<span class="built_in">NSDefaultRunLoopMode</span> beforeDate: [<span class="built_in">NSDate</span> date]];
+}
+</code></pre><ul>
+<li>二阶贝塞尔曲线中点绘制算法</li>
+</ul>
+<p>虚线表示取中点修正后的效果，对比差异效果非常明显。</p>
+<p><img src="http://7xotrj.com1.z0.glb.clouddn.com/smooth_line.png" alt="中点修正"></p>
+<pre><code>    - (<span class="keyword">void</span>)touchesBegan:(<span class="built_in">NSSet</span> *)touches withEvent:(<span class="built_in">UIEvent</span> *)event
+{
+    ctr = <span class="number">0</span>;
+    <span class="built_in">UITouch</span> *touch = [touches anyObject];
+    pts[<span class="number">0</span>] = [touch locationInView:<span class="keyword">self</span>];
+}
+
+- (<span class="keyword">void</span>)touchesMoved:(<span class="built_in">NSSet</span> *)touches withEvent:(<span class="built_in">UIEvent</span> *)event
+{
+        <span class="built_in">UITouch</span> *touch = [touches anyObject];
+    <span class="built_in">CGPoint</span> p = [touch locationInView:<span class="keyword">self</span>];
+    ctr++;
+    pts[ctr] = p;
+    <span class="keyword">if</span> (ctr == <span class="number">4</span>) 
+    {
+    pts[<span class="number">3</span>] = <span class="built_in">CGPointMake</span>((pts[<span class="number">2</span>]<span class="variable">.x</span> + pts[<span class="number">4</span>]<span class="variable">.x</span>)/<span class="number">2.0</span>, (pts[<span class="number">2</span>]<span class="variable">.y</span> + pts[<span class="number">4</span>]<span class="variable">.y</span>)/<span class="number">2.0</span>); <span class="comment">// move the endpoint to the middle of the line joining the     second control point of the first Bezier segment and the first control point of the second Bezier segment </span>
+
+    [path moveToPoint:pts[<span class="number">0</span>]];
+    [path addCurveToPoint:pts[<span class="number">3</span>] controlPoint1:pts[<span class="number">1</span>] controlPoint2:pts[<span class="number">2</span>]]; <span class="comment">// add a cubic Bezier from pt[0] to pt[3], with control points pt[1] and pt[2]</span>
+
+    [<span class="keyword">self</span> setNeedsDisplay];
+    <span class="comment">// replace points and get ready to handle the next segment</span>
+    pts[<span class="number">0</span>] = pts[<span class="number">3</span>]; 
+    pts[<span class="number">1</span>] = pts[<span class="number">4</span>]; 
+    ctr = <span class="number">1</span>;
+    }
+
+}
+
+- (<span class="keyword">void</span>)touchesEnded:(<span class="built_in">NSSet</span> *)touches withEvent:(<span class="built_in">UIEvent</span> *)event
+{
+    [<span class="keyword">self</span> drawBitmap];
+    [<span class="keyword">self</span> setNeedsDisplay];
+    [path removeAllPoints];
+    ctr = <span class="number">0</span>;
+}
+
+- (<span class="keyword">void</span>)touchesCancelled:(<span class="built_in">NSSet</span> *)touches withEvent:(<span class="built_in">UIEvent</span> *)event
+{
+    [<span class="keyword">self</span> touchesEnded:touches withEvent:event];
+}
+
+- (<span class="keyword">void</span>)drawBitmap
+{
+    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(<span class="keyword">self</span><span class="variable">.bounds</span><span class="variable">.size</span>, <span class="literal">YES</span>, <span class="number">0.0</span>);
+
+    <span class="keyword">if</span> (!incrementalImage) <span class="comment">// first time; paint background white</span>
+    {
+    <span class="built_in">UIBezierPath</span> *rectpath = [<span class="built_in">UIBezierPath</span> bezierPathWithRect:<span class="keyword">self</span><span class="variable">.bounds</span>];
+    [[<span class="built_in">UIColor</span> whiteColor] setFill];
+    [rectpath fill];
+    }
+    [incrementalImage drawAtPoint:<span class="built_in">CGPointZero</span>];
+    [[<span class="built_in">UIColor</span> blackColor] setStroke];
+    [path stroke];
+    incrementalImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();
+    <span class="built_in">UIGraphicsEndImageContext</span>();
+}
+</code></pre><ul>
+<li>Quartz 2D渲染</li>
+</ul>
+<p>在需要刷新的时候调用<code>[self setNeedsDisplayInRect:drawBox]</code>,drawBox表示重绘的区域。</p>
+<p>自动执行<code>- (void)drawRect:(CGRect)rect</code>函数进入绘制阶段。</p>
+<pre><code><span class="tag">-</span> (void)<span class="tag">drawRect</span>:(CGRect)<span class="tag">rect</span>
+{
+    <span class="attr_selector">[self paintLine]</span>;
+}
+</code></pre><p>然后调用Quartz 2D的接口开始重新绘制界面</p>
+<pre><code>- (<span class="keyword">void</span>)paintLine
+{
+    <span class="built_in">CGPoint</span> mid1 = midPoint1(_previousPoint1, _previousPoint2);
+    <span class="built_in">CGPoint</span> mid2 = midPoint1(_currentPoint, _previousPoint1);
+
+    <span class="built_in">CGContextRef</span> context = <span class="built_in">UIGraphicsGetCurrentContext</span>();
+
+    [<span class="keyword">self</span><span class="variable">.layer</span> renderInContext:context];
+
+    <span class="built_in">CGContextMoveToPoint</span>(context, mid1<span class="variable">.x</span>, mid1<span class="variable">.y</span>);
+    <span class="built_in">CGContextAddQuadCurveToPoint</span>(context, _previousPoint1<span class="variable">.x</span>, _previousPoint1<span class="variable">.y</span>, mid2<span class="variable">.x</span>, mid2<span class="variable">.y</span>);
+    <span class="built_in">CGContextSetLineCap</span>(context, k<span class="built_in">CGLineCapRound</span>);
+    <span class="built_in">CGContextSetBlendMode</span>(context, k<span class="built_in">CGBlendModeNormal</span>);
+    <span class="built_in">CGContextSetLineJoin</span>(context, k<span class="built_in">CGLineJoinRound</span>);
+    <span class="built_in">CGContextSetLineWidth</span>(context, <span class="keyword">self</span><span class="variable">.lineWidth</span>);
+    <span class="built_in">CGContextSetStrokeColorWithColor</span>(context, <span class="keyword">self</span><span class="variable">.lineColor</span><span class="variable">.CGColor</span>);
+    <span class="built_in">CGContextSetShouldAntialias</span>(context, <span class="literal">YES</span>);
+    <span class="built_in">CGContextSetAllowsAntialiasing</span>(context, <span class="literal">YES</span>);
+    <span class="built_in">CGContextSetFlatness</span>(context, <span class="number">0.1</span>f);
+
+    <span class="built_in">CGContextSetAlpha</span>(context, <span class="keyword">self</span><span class="variable">.lineAlpha</span>);
+    <span class="built_in">CGContextStrokePath</span>(context);
+}
+</code></pre><p>以上是<code>Quartz 2D</code>渲染工作的完整流程。</p>
+<h2 id="总结">总结</h2><p>首先，要感谢quix、stack、lilin的指导，使得这次优化工作顺利完成！</p>
+<p>其次，说一下个人心得，优化方案中的主要技术点其实并不是很高深只是一时想不到而已，在解决具体问题的过程其实就是反复探索、思考、实践的过程。静下心来、走下去，或许会有意想不到的收获。其实优化之前我内心是拒绝的，最后结果表明涂鸦是可以优化的，所以说要认真对待新事物和新思想。</p>
+<h2 id="参考文献">参考文献</h2><p><a href="https://code.tutsplus.com/tutorials/smooth-freehand-drawing-on-ios--mobile-13164" target="_blank" rel="external">Smooth Freehand Drawing on iOS</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/06/28/IOS触摸事件分发机制/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">IOS触摸事件分发机制</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="QQ日迹涂鸦优化" data-title="QQ日迹涂鸦优化" data-url="http://chernoy.ga/2016/10/31/QQ日迹涂鸦优化/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 Chenrony Duan
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
