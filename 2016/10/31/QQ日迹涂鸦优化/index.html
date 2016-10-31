@@ -15,7 +15,7 @@
 <meta property="og:image" content="http://7xotrj.com1.z0.glb.clouddn.com/smooth_line03.PNG">
 <meta property="og:image" content="http://7xotrj.com1.z0.glb.clouddn.com/smooth_line02.PNG">
 <meta property="og:image" content="http://7xotrj.com1.z0.glb.clouddn.com/smooth_line.png">
-<meta property="og:updated_time" content="2016-10-31T14:46:58.000Z">
+<meta property="og:updated_time" content="2016-10-31T15:17:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="QQ日迹涂鸦优化">
 <meta name="twitter:description" content="前言IOS6.6.0版本手机QQ，日迹涂鸦效果采用了矢量图形内存存储 + 局部刷新算法 + 二阶贝塞尔曲线中点绘制算法 + Quartz 2D渲染的全新解决方案，实现曲线平滑、无锯齿的效果。新方案主要优势是：矢量图形内存存储避免了对Disk进行频繁的I/O操作、局部刷新算法减少了CPU计算渲染路径和GPU渲染图形的负荷、Quartz 2D克服了OpenGL晦涩难懂的不足又能轻易的胜任图形渲染工作。">
@@ -417,8 +417,7 @@ TBEditDrawStep *aStep = [_drawSteps lastObject];
     <span class="built_in">CGContextStrokePath</span>(context);
 }
 </code></pre><p>以上是<code>Quartz 2D</code>渲染工作的完整流程。</p>
-<h2 id="总结">总结</h2><p>首先，要感谢quix、stack、lilin的指导，使得这次优化工作顺利完成！</p>
-<p>其次，说一下个人心得，优化方案中的主要技术点其实并不是很高深只是一时想不到而已，在解决具体问题的过程其实就是反复探索、思考、实践的过程。静下心来、走下去，或许会有意想不到的收获。其实优化之前我内心是拒绝的，最后结果表明涂鸦是可以优化的，所以说要认真对待新事物和新思想。</p>
+<h2 id="总结">总结</h2><p>优化方案中的主要技术点其实并不是很高深只是一时想不到而已，在解决具体问题的过程其实就是反复探索、思考、实践的过程。静下心来、走下去，或许会有意想不到的收获。其实优化之前我内心是拒绝的，最后结果表明涂鸦是可以优化的，所以说要认真对待新事物和新思想。</p>
 <h2 id="参考文献">参考文献</h2><p><a href="https://code.tutsplus.com/tutorials/smooth-freehand-drawing-on-ios--mobile-13164" target="_blank" rel="external">Smooth Freehand Drawing on iOS</a></p>
 
       
